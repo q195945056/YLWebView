@@ -66,9 +66,9 @@
 }
 -(void)initWKWebView
 {
-    WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
-    configuration.preferences = [[WKPreferences alloc] init];
-    configuration.userContentController = [[WKUserContentController alloc] init];
+    WKWebViewConfiguration* configuration = [[NSClassFromString(@"WKWebViewConfiguration") alloc] init];
+    configuration.preferences = [[NSClassFromString(@"WKPreferences") alloc] init];
+    configuration.userContentController = [[NSClassFromString(@"WKUserContentController") alloc] init];
     
     WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.bounds configuration:configuration];
     webView.UIDelegate = self;
