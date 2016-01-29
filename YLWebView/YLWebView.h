@@ -65,4 +65,8 @@ __TVOS_PROHIBITED @protocol YLWebViewDelegate <NSObject>
 ///是否根据视图大小来缩放页面  默认为YES
 @property (nonatomic) BOOL scalesPageToFit;
 
+@property (nonatomic) UIDataDetectorTypes dataDetectorTypes NS_AVAILABLE_IOS(3_0);
+
+@property (nonatomic) BOOL allowsInlineMediaPlayback NS_AVAILABLE_IOS(4_0); // iPhone Safari defaults to NO. iPad Safari defaults to YES
+
 @end

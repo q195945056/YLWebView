@@ -406,6 +406,28 @@
     }
 }
 
+- (void)setDataDetectorTypes:(UIDataDetectorTypes)dataDetectorTypes {
+    if (_dataDetectorTypes != dataDetectorTypes) {
+        _dataDetectorTypes = dataDetectorTypes;
+        if (_usingUIWebView) {
+            [(UIWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
+        } else {
+            //            [(WKWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
+        }
+    }
+}
+
+- (void)setAllowsInlineMediaPlayback:(BOOL)allowsInlineMediaPlayback {
+    if (_allowsInlineMediaPlayback == allowsInlineMediaPlayback) {
+        _allowsInlineMediaPlayback = allowsInlineMediaPlayback;
+        if (_usingUIWebView) {
+            [(UIWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
+        } else {
+            //            [(WKWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
+        }
+    }
+}
+
 -(NSInteger)countOfHistory
 {
     if(_usingUIWebView)
