@@ -325,6 +325,7 @@
         return [(WKWebView*)self.realWebView evaluateJavaScript:javaScriptString completionHandler:completionHandler];
     }
 }
+
 -(NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)javaScriptString
 {
     if(_usingUIWebView)
@@ -337,7 +338,12 @@
         __block NSString* result = nil;
         __block BOOL isExecuted = NO;
         [(WKWebView*)self.realWebView evaluateJavaScript:javaScriptString completionHandler:^(id obj, NSError *error) {
-            result = obj;
+//            NSLog(@"%@", javaScriptString);
+            NSString *tempS = obj;
+            if (tempS && ![tempS isKindOfClass:[NSString class]]) {
+                tempS = [NSString stringWithFormat:@"%@", tempS];
+            }
+            result = tempS;
             isExecuted = YES;
         }];
         
@@ -347,6 +353,7 @@
         return result;
     }
 }
+
 -(void)setScalesPageToFit:(BOOL)scalesPageToFit
 {
     if(_usingUIWebView)
