@@ -13,7 +13,6 @@
 		CC7681091C5A01F900C086CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC7681071C5A01F900C086CD /* Main.storyboard */; };
 		CC76810B1C5A01F900C086CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC76810A1C5A01F900C086CD /* Assets.xcassets */; };
 		CC76810E1C5A01F900C086CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC76810C1C5A01F900C086CD /* LaunchScreen.storyboard */; };
-		CC7681171C5A028100C086CD /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7681161C5A028100C086CD /* Person.m */; };
 		CC76813A1C5A18AD00C086CD /* YLWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7681391C5A18AD00C086CD /* YLWebView.m */; };
 		CC76813F1C5A218A00C086CD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC76813E1C5A218A00C086CD /* WebKit.framework */; };
 /* End PBXBuildFile section */
@@ -29,8 +28,6 @@
 		CC76810A1C5A01F900C086CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC76810D1C5A01F900C086CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC76810F1C5A01F900C086CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CC7681151C5A028100C086CD /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		CC7681161C5A028100C086CD /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		CC7681381C5A18AD00C086CD /* YLWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YLWebView.h; sourceTree = "<group>"; };
 		CC7681391C5A18AD00C086CD /* YLWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLWebView.m; sourceTree = "<group>"; };
 		CC76813E1C5A218A00C086CD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -74,8 +71,6 @@
 				CC7681051C5A01F900C086CD /* ViewController.m */,
 				CC7681381C5A18AD00C086CD /* YLWebView.h */,
 				CC7681391C5A18AD00C086CD /* YLWebView.m */,
-				CC7681151C5A028100C086CD /* Person.h */,
-				CC7681161C5A028100C086CD /* Person.m */,
 				CC7681071C5A01F900C086CD /* Main.storyboard */,
 				CC76810A1C5A01F900C086CD /* Assets.xcassets */,
 				CC76810C1C5A01F900C086CD /* LaunchScreen.storyboard */,
@@ -165,7 +160,6 @@
 			files = (
 				CC7681061C5A01F900C086CD /* ViewController.m in Sources */,
 				CC7681031C5A01F900C086CD /* AppDelegate.m in Sources */,
-				CC7681171C5A028100C086CD /* Person.m in Sources */,
 				CC76813A1C5A18AD00C086CD /* YLWebView.m in Sources */,
 				CC7681001C5A01F900C086CD /* main.m in Sources */,
 			);
