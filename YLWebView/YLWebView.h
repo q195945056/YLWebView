@@ -3,7 +3,7 @@
 //  YLWebView
 //
 //  Created by yanmingjun on 16/1/28.
-//  Copyright © 2016 youloft. All rights reserved.
+//  Copyright © 2016年 youloft. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -68,5 +68,7 @@ __TVOS_PROHIBITED @protocol YLWebViewDelegate <NSObject>
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes NS_AVAILABLE_IOS(3_0);
 
 @property (nonatomic) BOOL allowsInlineMediaPlayback NS_AVAILABLE_IOS(4_0); // iPhone Safari defaults to NO. iPad Safari defaults to YES
+
+//- (void)printCookie;
 
 @end

@@ -48,7 +48,8 @@
 }
 -(void)commonInit
 {
-    if([WKWebView class] && self.usingUIWebView == NO)
+    Class wkWebView = NSClassFromString(@"WKWebView");
+    if(wkWebView && self.usingUIWebView == NO)
     {
         [self initWKWebView];
         _usingUIWebView = NO;
@@ -66,9 +67,11 @@
 }
 -(void)initWKWebView
 {
-    WKWebViewConfiguration* configuration = [[NSClassFromString(@"WKWebViewConfiguration") alloc] init];
-    configuration.preferences = [[NSClassFromString(@"WKPreferences") alloc] init];
-    configuration.userContentController = [[NSClassFromString(@"WKUserContentController") alloc] init];
+    static WKWebViewConfiguration *configuration = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        configuration = [[NSClassFromString(@"WKWebViewConfiguration") alloc] init];
+    });
     
     WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.bounds configuration:configuration];
     webView.UIDelegate = self;
@@ -143,7 +146,54 @@
 -(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self callback_webViewDidFinishLoad];
+    
+    
+    
+    
 }
+
+//- (void)printCookie;
+//{
+////    if (self.usingUIWebView) {
+////        NSString *cookie = [(UIWebView *)self.realWebView stringByEvaluatingJavaScriptFromString:@"document.cookie"];
+////        NSLog(@"%@", cookie);
+//
+//        NSHTTPCookieStorage *myCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+//        for (NSHTTPCookie *cookie in [myCookie cookies]) {
+//            NSLog(@"%@", cookie);
+//        }
+//
+//
+////        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:self.request.URL]; // 这里的HOST是你web服务器的域名地址
+////        // 设置header，通过遍历cookies来一个一个的设置header
+////        for (NSHTTPCookie *cookie in cookies){
+////            NSLog(@"%@", cookie);
+////            // cookiesWithResponseHeaderFields方法，需要为URL设置一个cookie为NSDictionary类型的header，注意NSDictionary里面的forKey需要是@"Set-Cookie"
+//////            NSArray *headeringCookie = [NSHTTPCookie cookiesWithResponseHeaderFields:
+//////                                        [NSDictionary dictionaryWithObject:
+//////                                         [[NSString alloc] initWithFormat:@"%@=%@",[cookie name],[cookie value]]
+//////                                                                    forKey:@"Set-Cookie"]
+//////                                                                              forURL:[NSURL URLWithString:HOST]];
+//////
+//////            // 通过setCookies方法，完成设置，这样只要一访问URL为HOST的网页时，会自动附带上设置好的header
+//////            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:headeringCookie
+//////                                                               forURL:[NSURL URLWithString:HOST]
+//////                                                      mainDocumentURL:nil];
+////        }
+//
+////    } else {
+////        [(WKWebView *)self.realWebView evaluateJavaScript:@"sessionStorage.cookie" completionHandler:^(id _Nullable object, NSError * _Nullable error) {
+////            NSLog(@"%@", object);
+////        }];
+////    }
+////    WKWebsiteDataStore *defaultDataStore = [NSClassFromString(@"WKWebsiteDataStore") defaultDataStore];
+////    NSSet *types = [NSSet setWithObjects:WKWebsiteDataTypeSessionStorage, nil];
+////    [defaultDataStore fetchDataRecordsOfTypes:types completionHandler:^(NSArray<WKWebsiteDataRecord *> * _Nonnull results) {
+////        NSLog(@"%@", results);
+////    }];
+//}
+
+
 - (void)webView:(WKWebView *) webView didFailProvisionalNavigation: (WKNavigation *) navigation withError: (NSError *) error
 {
     [self callback_webViewDidFailLoadWithError:error];
@@ -152,8 +202,60 @@
 {
     [self callback_webViewDidFailLoadWithError:error];
 }
+
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+//    NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+//    NSArray *cookies =[NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+//
+//    for (NSHTTPCookie *cookie in cookies) {
+//        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+//    }
+//
+//    decisionHandler(WKNavigationResponsePolicyAllow);
+//}
 #pragma mark- WKUIDelegate
-///--  还没用到
+/////--  支持alert和confirm
+//- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler;
+//{
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:webView.title message:message preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[Utilities localString:@"好"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        completionHandler();
+//    }];
+//    [alertController addAction:cancelAction];
+//    [APPDELEGATE.mainTabVC presentViewController:alertController animated:YES completion:nil];
+//}
+//
+//- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler {
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:webView.title message:message preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[Utilities localString:@"取消"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        completionHandler(NO);
+//    }];
+//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:[Utilities localString:@"好"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        completionHandler(YES);
+//    }];
+//    [alertController addAction:cancelAction];
+//    [alertController addAction:confirmAction];
+//    [APPDELEGATE.mainTabVC presentViewController:alertController animated:YES completion:nil];
+//}
+//
+//- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * __nullable result))completionHandler;
+//{
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:webView.title message:prompt preferredStyle:UIAlertControllerStyleAlert];
+//    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.placeholder = defaultText;
+//    }];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[Utilities localString:@"取消"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        completionHandler(nil);
+//    }];
+//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:[Utilities localString:@"好"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        UITextField *textField = alertController.textFields.firstObject;
+//        completionHandler(textField.text);
+//    }];
+//    [alertController addAction:cancelAction];
+//    [alertController addAction:confirmAction];
+//    [APPDELEGATE.mainTabVC presentViewController:alertController animated:YES completion:nil];
+//}
+
 #pragma mark- CALLBACK IMYVKWebView Delegate
 
 - (void)callback_webViewDidFinishLoad
@@ -191,6 +293,30 @@
 }
 
 #pragma mark- 基础方法
+
+- (void)setDataDetectorTypes:(UIDataDetectorTypes)dataDetectorTypes {
+    if (_dataDetectorTypes != dataDetectorTypes) {
+        _dataDetectorTypes = dataDetectorTypes;
+        if (_usingUIWebView) {
+            [(UIWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
+        } else {
+            //            [(WKWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
+        }
+    }
+}
+
+- (void)setAllowsInlineMediaPlayback:(BOOL)allowsInlineMediaPlayback {
+    if (_allowsInlineMediaPlayback == allowsInlineMediaPlayback) {
+        _allowsInlineMediaPlayback = allowsInlineMediaPlayback;
+        if (_usingUIWebView) {
+            [(UIWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
+        } else {
+            //            [(WKWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
+        }
+    }
+}
+
+
 -(UIScrollView *)scrollView
 {
     return [(id)self.realWebView scrollView];
@@ -325,7 +451,6 @@
         return [(WKWebView*)self.realWebView evaluateJavaScript:javaScriptString completionHandler:completionHandler];
     }
 }
-
 -(NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)javaScriptString
 {
     if(_usingUIWebView)
@@ -338,7 +463,7 @@
         __block NSString* result = nil;
         __block BOOL isExecuted = NO;
         [(WKWebView*)self.realWebView evaluateJavaScript:javaScriptString completionHandler:^(id obj, NSError *error) {
-//            NSLog(@"%@", javaScriptString);
+            NSLog(@"%@", javaScriptString);
             NSString *tempS = obj;
             if (tempS && ![tempS isKindOfClass:[NSString class]]) {
                 tempS = [NSString stringWithFormat:@"%@", tempS];
@@ -353,7 +478,6 @@
         return result;
     }
 }
-
 -(void)setScalesPageToFit:(BOOL)scalesPageToFit
 {
     if(_usingUIWebView)
@@ -410,28 +534,6 @@
     else
     {
         return _scalesPageToFit;
-    }
-}
-
-- (void)setDataDetectorTypes:(UIDataDetectorTypes)dataDetectorTypes {
-    if (_dataDetectorTypes != dataDetectorTypes) {
-        _dataDetectorTypes = dataDetectorTypes;
-        if (_usingUIWebView) {
-            [(UIWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
-        } else {
-            //            [(WKWebView*)self.realWebView setDataDetectorTypes:dataDetectorTypes];
-        }
-    }
-}
-
-- (void)setAllowsInlineMediaPlayback:(BOOL)allowsInlineMediaPlayback {
-    if (_allowsInlineMediaPlayback == allowsInlineMediaPlayback) {
-        _allowsInlineMediaPlayback = allowsInlineMediaPlayback;
-        if (_usingUIWebView) {
-            [(UIWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
-        } else {
-            //            [(WKWebView*)self.realWebView setAllowsInlineMediaPlayback:allowsInlineMediaPlayback];
-        }
     }
 }
 
@@ -501,33 +603,33 @@
     }
     return hasResponds;
 }
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
-{
-    NSMethodSignature* methodSign = [super methodSignatureForSelector:selector];
-    if(methodSign == nil)
-    {
-        if([self.realWebView respondsToSelector:selector])
-        {
-            methodSign = [self.realWebView methodSignatureForSelector:selector];
-        }
-        else
-        {
-            methodSign = [(id)self.delegate methodSignatureForSelector:selector];
-        }
-    }
-    return methodSign;
-}
-- (void)forwardInvocation:(NSInvocation*)invocation
-{
-    if([self.realWebView respondsToSelector:invocation.selector])
-    {
-        [invocation invokeWithTarget:self.realWebView];
-    }
-    else
-    {
-        [invocation invokeWithTarget:self.delegate];
-    }
-}
+//- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+//{
+//    NSMethodSignature* methodSign = [super methodSignatureForSelector:selector];
+//    if(methodSign == nil)
+//    {
+//        if([self.realWebView respondsToSelector:selector])
+//        {
+//            methodSign = [self.realWebView methodSignatureForSelector:selector];
+//        }
+//        else
+//        {
+//            methodSign = [(id)self.delegate methodSignatureForSelector:selector];
+//        }
+//    }
+//    return methodSign;
+//}
+//- (void)forwardInvocation:(NSInvocation*)invocation
+//{
+//    if([self.realWebView respondsToSelector:invocation.selector])
+//    {
+//        [invocation invokeWithTarget:self.realWebView];
+//    }
+//    else
+//    {
+//        [invocation invokeWithTarget:self.delegate];
+//    }
+//}
 
 #pragma mark- 清理
 -(void)dealloc
@@ -543,7 +645,6 @@
         webView.UIDelegate = nil;
         webView.navigationDelegate = nil;
         
-        [webView removeObserver:self forKeyPath:@"estimatedProgress"];
         [webView removeObserver:self forKeyPath:@"title"];
     }
     [_realWebView scrollView].delegate = nil;
